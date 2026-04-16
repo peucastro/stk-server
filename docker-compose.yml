@@ -1,0 +1,11 @@
+services:
+  stk-server:
+    build: .
+    ports:
+      - "2757:2757/udp"
+      - "2759:2759/udp"
+    volumes:
+      - ./config.xml:/app/config.xml:ro
+    env_file:
+      - .env
+    restart: unless-stopped
