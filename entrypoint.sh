@@ -1,18 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
 CONFIG_FILE="/app/config/server-config.xml"
 
-if [ -f /app/config.xml ]; then
-    CONFIG_FILE="/app/config.xml"
-elif [ -f /app/config/server-config.xml ]; then
-    CONFIG_FILE="/app/config/server-config.xml"
-fi
-
 generate_config() {
     cat <<EOF
 <?xml version="1.0"?>
+<!-- Auto-generated SuperTuxKart server configuration -->
+<!-- Based on environment variables passed to the container -->
 <server-config version="6" >
     <server-name value="${SERVER_NAME:-STK Server}" />
     <server-port value="${SERVER_PORT:-2759}" />
@@ -58,15 +54,15 @@ generate_config() {
     <kick-idle-player-seconds value="${KICK_IDLE_SECONDS:-60}" />
     <state-frequency value="${STATE_FREQUENCY:-10}" />
     <sql-management value="${SQL_MANAGEMENT:-false}" />
-    <database-file value="stkservers.db" />
-    <database-timeout value="1000" />
-    <ip-ban-table value="" />
-    <ipv6-ban-table value="" />
-    <online-id-ban-table value="" />
-    <player-reports-table value="" />
-    <player-reports-expired-days value="3" />
-    <ip-geolocation-table value="" />
-    <ipv6-geolocation-table value="" />
+    <database-file value="${DATABASE_FILE:-stkservers.db}" />
+    <database-timeout value="${DATABASE_TIMEOUT:-1000}" />
+    <ip-ban-table value="${IP_BAN_TABLE:-}" />
+    <ipv6-ban-table value="${IPV6_BAN_TABLE:-}" />
+    <online-id-ban-table value="${ONLINE_ID_BAN_TABLE:-}" />
+    <player-reports-table value="${PLAYER_REPORTS_TABLE:-}" />
+    <player-reports-expired-days value="${PLAYER_REPORTS_EXPIRED_DAYS:-3}" />
+    <ip-geolocation-table value="${IP_GEOLOCATION_TABLE:-}" />
+    <ipv6-geolocation-table value="${IPV6_GEOLOCATION_TABLE:-}" />
     <ai-handling value="${AI_HANDLING:-false}" />
 </server-config>
 EOF
@@ -77,11 +73,11 @@ if [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 fi
 
 if [ -f /app/config.xml ]; then
-    cp /app/config.xml "$CONFIG_FILE"
+    CONFIG_FILE="/app/config.xml"
 elif [ -f /app/config/server-config.xml ]; then
-    cp /app/config/server-config.xml "$CONFIG_FILE"
+    CONFIG_FILE="/app/config/server-config.xml"
 else
     generate_config > "$CONFIG_FILE"
 fi
 
-exec supertuxkart --server-config="$CONFIG_FILE" --no-graphics --lan-server="${LAN_SERVER_NAME:-${SERVER_NAME:-STK Server}}"
+exec supertuxkart --server-config="$CONFIG_FILE" --lan-server="${LAN_SERVER_NAME:-${SERVER_NAME:-STK Server}}"
