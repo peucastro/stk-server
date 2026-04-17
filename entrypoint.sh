@@ -19,6 +19,7 @@ generate_config() {
     <wan-server value="${WAN_SERVER:-false}" />
     <enable-console value="${ENABLE_CONSOLE:-false}" />
     <server-max-players value="${MAX_PLAYERS:-8}" />
+    <max-players-in-game value="${MAX_PLAYERS_IN_GAME:-0}" />
     <private-server-password value="${SERVER_PASSWORD:-}" />
     <motd value="${MOTD:-}" />
     <chat value="${CHAT:-true}" />
@@ -39,7 +40,8 @@ generate_config() {
     <strict-players value="${STRICT_PLAYERS:-false}" />
     <ranked value="${RANKED:-false}" />
     <server-configurable value="${SERVER_CONFIGURABLE:-false}" />
-    <live-players value="${LIVE_PLAYERS:-true}" />
+    <live-spectate value="${LIVE_SPECTATE:-${LIVE_PLAYERS:-true}}" />
+    <real-addon-karts value="${REAL_ADDON_KARTS:-true}" />
     <flag-return-timeout value="${FLAG_RETURN_TIMEOUT:-20}" />
     <flag-deactivated-time value="${FLAG_DEACTIVATED_TIME:-3}" />
     <hit-limit value="${HIT_LIMIT:-20}" />
@@ -56,14 +58,15 @@ generate_config() {
     <sql-management value="${SQL_MANAGEMENT:-false}" />
     <database-file value="${DATABASE_FILE:-stkservers.db}" />
     <database-timeout value="${DATABASE_TIMEOUT:-1000}" />
-    <ip-ban-table value="${IP_BAN_TABLE:-}" />
-    <ipv6-ban-table value="${IPV6_BAN_TABLE:-}" />
-    <online-id-ban-table value="${ONLINE_ID_BAN_TABLE:-}" />
-    <player-reports-table value="${PLAYER_REPORTS_TABLE:-}" />
+    <ip-ban-table value="${IP_BAN_TABLE:-ip_ban}" />
+    <ipv6-ban-table value="${IPV6_BAN_TABLE:-ipv6_ban}" />
+    <online-id-ban-table value="${ONLINE_ID_BAN_TABLE:-online_id_ban}" />
+    <player-reports-table value="${PLAYER_REPORTS_TABLE:-player_reports}" />
     <player-reports-expired-days value="${PLAYER_REPORTS_EXPIRED_DAYS:-3}" />
-    <ip-geolocation-table value="${IP_GEOLOCATION_TABLE:-}" />
-    <ipv6-geolocation-table value="${IPV6_GEOLOCATION_TABLE:-}" />
+    <ip-geolocation-table value="${IP_GEOLOCATION_TABLE:-ip_mapping}" />
+    <ipv6-geolocation-table value="${IPV6_GEOLOCATION_TABLE:-ipv6_mapping}" />
     <ai-handling value="${AI_HANDLING:-false}" />
+    <ai-anywhere value="${AI_ANYWHERE:-false}" />
 </server-config>
 EOF
 }

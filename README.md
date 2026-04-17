@@ -31,7 +31,7 @@ docker run -d \
 
 ### Via Config File
 
-Mount a config file at `/app/config.xml`:
+Mount a config file at `/app/config.xml` (or `/app/config/server-config.xml`):
 
 ```bash
 docker run -d \
@@ -50,21 +50,25 @@ STK server needs two UDP ports exposed:
 
 ## Environment Variables
 
+The defaults in the tables below are the image runtime defaults from `entrypoint.sh`.
+The `.env.example` file is only a sample profile you can customize.
+
 ### Basic Server Settings
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `SERVER_NAME` | STK Server | Server name displayed to players |
 | `LAN_SERVER_NAME` | (uses SERVER_NAME) | Server name for LAN discovery |
 | `SERVER_PORT` | 2759 | Server port |
-| `SERVER_MODE` | 3 | Game mode (0=GP, 1=Time Trial, 3=Race, 6=Soccer, 7=FFA, 8=CTF) |
+| `SERVER_MODE` | 3 | Game mode (0=Normal GP, 1=Time Trial GP, 3=Normal Race, 4=Time Trial, 6=Soccer, 7=FFA, 8=CTF) |
 | `SERVER_DIFFICULTY` | 0 | Difficulty (0=Beginner, 1=Intermediate, 2=Expert, 3=SuperTux) |
 | `MAX_PLAYERS` | 8 | Maximum concurrent players |
+| `MAX_PLAYERS_IN_GAME` | 0 | Max players actively in race (0 = all players can play) |
 
 ### Game Settings
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `MOTD` | (empty) | Message of the day |
 | `SERVER_PASSWORD` | (empty) | Private server password (empty = public) |
 | `CHAT` | true | Enable chat |
@@ -76,22 +80,24 @@ STK server needs two UDP ports exposed:
 | `MIN_START_PLAYERS` | 2 | Minimum players to start race |
 | `START_GAME_COUNTER` | 60 | Countdown before race starts (seconds) |
 | `ENABLE_CONSOLE` | false | Enable in-game console |
-| `SERVER_CONFIGURABLE` | false | Allow players to configure server settings |
+| `SERVER_CONFIGURABLE` | false | Allow server owner to change difficulty/mode in lobby |
 
 ### Game Mode Specific
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `GP_TRACK_COUNT` | 3 | Number of tracks in Grand Prix |
-| `SOCCER_GOAL_TARGET` | false | Soccer goal target count |
+| `SOCCER_GOAL_TARGET` | false | Soccer goals mode (`true`) or timed mode (`false`) |
 | `STRICT_PLAYERS` | false | Strict player validation |
 | `RANKED` | false | Enable ranked matches |
-| `LIVE_PLAYERS` | true | Show live player info |
+| `LIVE_SPECTATE` | true | Allow live join/spectate for in-progress games |
+| `LIVE_PLAYERS` | true | Backward-compatible alias for `LIVE_SPECTATE` |
+| `REAL_ADDON_KARTS` | true | Send real addon kart physics to clients |
 
 ### Physics & Gameplay
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `MAX_PING` | 300 | Maximum ping in milliseconds |
 | `JITTER_TOLERANCE` | 100 | Jitter tolerance (milliseconds) |
 | `KICK_HIGH_PING` | false | Kick players with high ping |
@@ -104,28 +110,29 @@ STK server needs two UDP ports exposed:
 ### CTF & FFA Modes
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `CAPTURE_LIMIT` | 5 | CTF captures to win |
 | `TIME_LIMIT_CTF` | 600 | CTF time limit (seconds) |
 | `TIME_LIMIT_FFA` | 360 | FFA time limit (seconds) |
 | `FLAG_RETURN_TIMEOUT` | 20 | CTF flag auto-return timeout (seconds) |
 | `FLAG_DEACTIVATED_TIME` | 3 | CTF flag deactivate time (seconds) |
-| `HIT_LIMIT` | 20 | Soccer hit limit |
+| `HIT_LIMIT` | 20 | FFA hit limit |
 
 ### Server Network Settings
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `WAN_SERVER` | false | Enable public internet server |
 | `FIREWALLED_SERVER` | true | Server is behind firewall |
 | `IPV6_CONNECTION` | true | Enable IPv6 connections |
 | `OWNER_LESS` | false | Server doesn't have an owner |
 | `AI_HANDLING` | false | Enable AI player handling |
+| `AI_ANYWHERE` | false | Allow AI instances to connect from outside LAN |
 
 ### Matchmaking Settings
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `KARTS_THRESHOLD` | 1 | Official karts threshold (0-1) |
 | `TRACKS_THRESHOLD` | 0.7 | Official tracks threshold (0-1) |
 | `AUTO_GAME_TIME_RATIO` | -1 | Auto game time ratio (-1 = disabled) |
@@ -135,23 +142,24 @@ STK server needs two UDP ports exposed:
 For public internet servers (`WAN_SERVER=true`), also set:
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `USERNAME` | (required) | STK account username |
 | `PASSWORD` | (required) | STK account password |
 
 ### Database Settings
 
 | Variable | Default | Description |
-|----------|---------|-------------|
+| -------- | ------- | ----------- |
 | `SQL_MANAGEMENT` | false | Enable SQL database for player stats |
 | `DATABASE_FILE` | stkservers.db | Database filename |
 | `DATABASE_TIMEOUT` | 1000 | Database timeout (milliseconds) |
-| `IP_BAN_TABLE` | (empty) | IP ban table name |
-| `IPV6_BAN_TABLE` | (empty) | IPv6 ban table name |
-| `ONLINE_ID_BAN_TABLE` | (empty) | Online ID ban table name |
-| `PLAYER_REPORTS_TABLE` | (empty) | Player reports table name |
+| `IP_BAN_TABLE` | ip_ban | IP ban table name |
+| `IPV6_BAN_TABLE` | ipv6_ban | IPv6 ban table name |
+| `ONLINE_ID_BAN_TABLE` | online_id_ban | Online ID ban table name |
+| `PLAYER_REPORTS_TABLE` | player_reports | Player reports table name |
 | `PLAYER_REPORTS_EXPIRED_DAYS` | 3 | Days before player reports expire |
-| `IP_GEOLOCATION_TABLE` | (empty) | IP geolocation table name |
-| `IPV6_GEOLOCATION_TABLE` | (empty) | IPv6 geolocation table name |
+| `IP_GEOLOCATION_TABLE` | ip_mapping | IP geolocation table name |
+| `IPV6_GEOLOCATION_TABLE` | ipv6_mapping | IPv6 geolocation table name |
 
-**Note:** When using `SQL_MANAGEMENT=true`, mount a persistent volume at `/app` to keep the database.
+**Note:** Do not mount over `/app` (it contains the entrypoint and app files).
+If you use `SQL_MANAGEMENT=true`, mount a dedicated data path (for example `/data`) and set `DATABASE_FILE=/data/stkservers.db`.
